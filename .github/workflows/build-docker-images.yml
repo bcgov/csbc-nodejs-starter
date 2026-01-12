@@ -6,12 +6,24 @@ on:
       - main
       - develop
       - stage
+  workflow_dispatch:
+    inputs:
+      build-api:
+        description: 'Build API image'
+        required: true
+        type: boolean
+        default: true
+      build-web:
+        description: 'Build web image'
+        required: true
+        type: boolean
+        default: true
 
 env:
   REGISTRY: ghcr.io
 
 jobs:
-  # Detect which projects are affected using Turbo
+  # Detect which projects are affected using Turbo or manual inputs
   changes:
     runs-on: ubuntu-latest
     permissions:
@@ -20,39 +32,60 @@ jobs:
       api: ${{ steps.affected.outputs.api }}
       web: ${{ steps.affected.outputs.web }}
     steps:
+      - name: Check manual trigger
+        id: manual
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "Manual trigger detected"
+            echo "api=${{ inputs.build-api }}" >> $GITHUB_OUTPUT
+            echo "web=${{ inputs.build-web }}" >> $GITHUB_OUTPUT
+            echo "is_manual=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_manual=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Checkout repository
+        if: steps.manual.outputs.is_manual != 'true'
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Setup Node.js
+        if: steps.manual.outputs.is_manual != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
 
       - name: Install dependencies
+        if: steps.manual.outputs.is_manual != 'true'
         run: npm ci
 
       - name: Check affected projects
         id: affected
         run: |
-          # Get the list of affected projects
-          AFFECTED=$(npx turbo ls --affected --output=json 2>/dev/null || echo '[]')
-          echo "Affected projects: $AFFECTED"
-
-          # Check if api is affected
-          if echo "$AFFECTED" | grep -q '"api"'; then
-            echo "api=true" >> $GITHUB_OUTPUT
+          if [ "${{ steps.manual.outputs.is_manual }}" = "true" ]; then
+            echo "Using manual inputs"
+            echo "api=${{ steps.manual.outputs.api }}" >> $GITHUB_OUTPUT
+            echo "web=${{ steps.manual.outputs.web }}" >> $GITHUB_OUTPUT
           else
-            echo "api=false" >> $GITHUB_OUTPUT
-          fi
+            # Get the list of affected projects
+            AFFECTED=$(npx turbo ls --affected --output=json 2>/dev/null || echo '[]')
+            echo "Affected projects: $AFFECTED"
 
-          # Check if web is affected
-          if echo "$AFFECTED" | grep -q '"web"'; then
-            echo "web=true" >> $GITHUB_OUTPUT
-          else
-            echo "web=false" >> $GITHUB_OUTPUT
+            # Check if api is affected
+            if echo "$AFFECTED" | grep -q '"api"'; then
+              echo "api=true" >> $GITHUB_OUTPUT
+            else
+              echo "api=false" >> $GITHUB_OUTPUT
+            fi
+
+            # Check if web is affected
+            if echo "$AFFECTED" | grep -q '"web"'; then
+              echo "web=true" >> $GITHUB_OUTPUT
+            else
+              echo "web=false" >> $GITHUB_OUTPUT
+            fi
           fi
 
   # Build Docker images for affected projects
