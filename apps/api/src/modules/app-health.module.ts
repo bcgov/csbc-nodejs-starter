@@ -1,13 +1,21 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { LoggerModule } from 'nestjs-pino';
-import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
 import { AppConfigDto, AppConfigSchema } from 'src/common/dtos/app-config.dto';
-import { HttpExceptionFilter } from 'src/common/filters/http-exception.filter';
-import { AuthModule } from './auth/auth.module';
-import { JwtGuard } from './auth/guards/jwt.guard';
+import { DatabaseModule } from './database/database.module';
+import { HealthModule } from './health/health.module';
 
+/**
+ * AppHealthModule is a minimal module that only serves health check endpoints.
+ * It runs on a separate port (9000) to keep health endpoints internal and not
+ * exposed via the public Route.
+ *
+ * This module includes:
+ * - Configuration management (ConfigModule)
+ * - Logging (LoggerModule)
+ * - Database connectivity (DatabaseModule) - for database health checks
+ * - Health checks (HealthModule)
+ */
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -29,25 +37,8 @@ import { JwtGuard } from './auth/guards/jwt.guard';
       },
       inject: [ConfigService],
     }),
-    AuthModule,
-  ],
-  providers: [
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: JwtGuard,
-    },
-    {
-      provide: APP_INTERCEPTOR,
-      useClass: ZodSerializerInterceptor,
-    },
-    {
-      provide: APP_PIPE,
-      useClass: ZodValidationPipe,
-    },
+    DatabaseModule,
+    HealthModule,
   ],
 })
-export class AppModule {}
+export class AppHealthModule {}
