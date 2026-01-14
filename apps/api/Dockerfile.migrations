@@ -37,6 +37,7 @@ COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules/
 
 # Copy drizzle configuration, migrations, and db config schema
 COPY --from=pruner /app/out/full/apps/api/drizzle ./apps/api/drizzle
+COPY --from=pruner /app/out/full/apps/api/src/common/dtos/app-config.dto.ts ./apps/api/src/common/dtos/app-config.dto.ts
 
 # Copy package.json for npm scripts
 COPY --from=pruner /app/out/full/apps/api/package.json ./apps/api/package.json
