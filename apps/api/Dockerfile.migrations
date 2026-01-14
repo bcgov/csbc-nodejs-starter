@@ -60,4 +60,4 @@ WORKDIR /app/apps/api
 ENV NODE_ENV=production
 
 # Auto-discover and run all database migrations
-CMD ["npm", "run", "db:migrate"]
+CMD ["./scripts/migrate-all.sh"]
