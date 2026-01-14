@@ -26,20 +26,20 @@ RUN npm ci
 # Stage 3: Production migrations image
 FROM node:24-alpine AS migrations
 
+# Install postgresql-client for pg_isready
+RUN apk add --no-cache postgresql-client
+
 WORKDIR /app
 
 # Copy all node_modules (includes drizzle-kit)
 COPY --from=dependencies /app/node_modules ./node_modules/
 COPY --from=dependencies /app/apps/api/node_modules ./apps/api/node_modules/
 
-# Copy drizzle configuration and migrations
+# Copy drizzle configuration, migrations, and db config schema
 COPY --from=pruner /app/out/full/apps/api/drizzle ./apps/api/drizzle
 
 # Copy package.json for npm scripts
 COPY --from=pruner /app/out/full/apps/api/package.json ./apps/api/package.json
-
-# Copy .env schema for config validation (drizzle config imports it)
-COPY --from=pruner /app/out/full/apps/api/src/common/dtos/app-config.dto.ts ./apps/api/src/common/dtos/app-config.dto.ts
 
 # Copy migration script
 COPY --from=pruner /app/out/full/apps/api/scripts ./apps/api/scripts

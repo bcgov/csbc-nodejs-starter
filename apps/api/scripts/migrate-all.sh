@@ -4,6 +4,31 @@
 
 set -e
 
+# Wait for database to be ready
+wait_for_db() {
+  echo "Waiting for database to be ready..."
+
+  max_attempts=${DB_WAIT_MAX_ATTEMPTS:-30}
+  attempt=1
+
+  while [ $attempt -le $max_attempts ]; do
+    if pg_isready -h "$DEFAULT_DB_HOST" -p "$DEFAULT_DB_PORT" -U "$DEFAULT_DB_USER" -d "$DEFAULT_DB_NAME" > /dev/null 2>&1; then
+      echo "Database is ready."
+      return 0
+    fi
+
+    echo "  Attempt $attempt/$max_attempts - Database not ready, waiting..."
+    sleep 2
+    attempt=$((attempt + 1))
+  done
+
+  echo "Database did not become ready in time."
+  return 1
+}
+
+wait_for_db
+
+echo ""
 echo "Starting database migrations..."
 
 failed=0

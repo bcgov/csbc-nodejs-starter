@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { defineConfig } from 'drizzle-kit';
-import { AppConfigSchema } from 'src/common/dtos/app-config.dto';
+import { AppConfigSchema } from '../../src/common/dtos/app-config.dto';
 
 const parsed = AppConfigSchema.parse(process.env);
 
