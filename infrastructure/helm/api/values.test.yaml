@@ -27,14 +27,6 @@ resources:
     cpu: 500m
     memory: 512Mi
 
-# OpenShift Route configuration for test
-route:
-  enabled: true
-  tls:
-    enabled: true
-    termination: edge
-    insecureEdgeTerminationPolicy: Redirect
-
 # Database migrations for test
 migrations:
   enabled: true

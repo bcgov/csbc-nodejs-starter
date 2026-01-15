@@ -118,28 +118,6 @@ service:
   # Service annotations
   annotations: {}
 
-# OpenShift Route configuration for external access
-route:
-  # Enable Route creation
-  enabled: true
-  # Hostname for the route (leave empty for auto-generation by OpenShift)
-  host: ""
-  # Path for the route
-  path: "/"
-  # TLS configuration
-  tls:
-    # Enable TLS
-    enabled: true
-    # TLS termination type (edge, passthrough, reencrypt)
-    termination: edge
-    # Policy for HTTP traffic (Redirect, Allow, None)
-    insecureEdgeTerminationPolicy: Redirect
-  # Route annotations (for rate limiting, timeouts, etc.)
-  annotations: {}
-    # haproxy.router.openshift.io/rate-limit-connections: "true"
-    # haproxy.router.openshift.io/rate-limit-connections.concurrent-tcp: "100"
-    # haproxy.router.openshift.io/timeout: 30s
-
 # Resource limits and requests
 resources:
   requests:

@@ -75,25 +75,6 @@ service:
   # Service annotations
   annotations: {}
 
-# OpenShift Route configuration for external access
-route:
-  # Enable Route creation
-  enabled: true
-  # Hostname for the route (leave empty for auto-generation by OpenShift)
-  host: ""
-  # Path for the route
-  path: "/"
-  # TLS configuration
-  tls:
-    # Enable TLS
-    enabled: true
-    # TLS termination type (edge, passthrough, reencrypt)
-    termination: edge
-    # Policy for HTTP traffic (Redirect, Allow, None)
-    insecureEdgeTerminationPolicy: Redirect
-  # Route annotations (for rate limiting, timeouts, etc.)
-  annotations: {}
-
 # Resource limits and requests
 resources:
   requests:

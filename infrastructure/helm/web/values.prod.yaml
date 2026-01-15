@@ -20,19 +20,6 @@ resources:
     cpu: 500m
     memory: 512Mi
 
-# OpenShift Route configuration for production
-route:
-  enabled: true
-  tls:
-    enabled: true
-    termination: edge
-    insecureEdgeTerminationPolicy: Redirect
-  # Production route annotations for rate limiting and timeouts
-  annotations:
-    haproxy.router.openshift.io/rate-limit-connections: "true"
-    haproxy.router.openshift.io/rate-limit-connections.concurrent-tcp: "100"
-    haproxy.router.openshift.io/timeout: "60s"
-
 # Pod annotations for production monitoring
 podAnnotations:
   prometheus.io/scrape: "true"
