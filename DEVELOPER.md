@@ -58,36 +58,27 @@ Secrets (per environment)
 Variables (per environment)
 
 Common:
+
 | Variable | Description |
 | -------- | ----------- |
 | OPENSHIFT_SERVER | OpenShift API URL |
 | OPENSHIFT_NAMESPACE | Target namespace |
 
-┌─────────────────────┬───────────────────┬────────────────────────────────────────┐
-│      Variable       │    Description    │             Example (dev)              │
-├─────────────────────┼───────────────────┼────────────────────────────────────────┤
-│ OPENSHIFT_SERVER    │ OpenShift API URL │ https://api.gold.devops.gov.bc.ca:6443 │
-├─────────────────────┼───────────────────┼────────────────────────────────────────┤
-│ OPENSHIFT_NAMESPACE │ Target namespace  │ d62e77-dev                             │
-└─────────────────────┴───────────────────┴────────────────────────────────────────┘
 API-specific:
-┌───────────────────┬─────────────────────────┬─────────────────────────────────────────────────────────────────────────────────────┐
-│     Variable      │       Description       │                                    Example (dev)                                    │
-├───────────────────┼─────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────┤
-│ API_OIDC_ISSUER   │ OIDC issuer URL for API │ https://dev.loginproxy.gov.bc.ca/auth/realms/standard                               │
-├───────────────────┼─────────────────────────┼─────────────────────────────────────────────────────────────────────────────────────┤
-│ API_OIDC_JWKS_URI │ OIDC JWKS URI for API   │ https://dev.loginproxy.gov.bc.ca/auth/realms/standard/protocol/openid-connect/certs │
-└───────────────────┴─────────────────────────┴─────────────────────────────────────────────────────────────────────────────────────┘
+
+| Variable | Description |
+| -------- | ----------- |
+| API_OIDC_ISSUER | OIDC issuer URL for API |
+| API_OIDC_JWKS_URI | OIDC JWKS URI for API |
+
 Web-specific:
-┌────────────────────┬─────────────────────────┬───────────────────────────────────────────────────────────────┐
-│      Variable      │       Description       │                         Example (dev)                         │
-├────────────────────┼─────────────────────────┼───────────────────────────────────────────────────────────────┤
-│ WEB_OIDC_ISSUER    │ OIDC issuer URL for Web │ https://dev.loginproxy.gov.bc.ca/auth/realms/standard         │
-├────────────────────┼─────────────────────────┼───────────────────────────────────────────────────────────────┤
-│ WEB_OIDC_CLIENT_ID │ OIDC client ID for Web  │ single-digital-gateway-6071                                   │
-├────────────────────┼─────────────────────────┼───────────────────────────────────────────────────────────────┤
-│ WEB_BASE_URL       │ Web route hostname      │ csbc-nodejs-starter-web-d62e77-dev.apps.gold.devops.gov.bc.ca │
-└────────────────────┴─────────────────────────┴───────────────────────────────────────────────────────────────┘
+
+| Variable | Description |
+| -------- | ----------- |
+| WEB_OIDC_ISSUER | OIDC issuer URL for Web |
+| WEB_OIDC_CLIENT_ID | OIDC client ID for Web |
+| WEB_BASE_URL | Web route hostname |
+
 Note: Variables use vars.* syntax in workflows, secrets use secrets.*
 
 The redirect URIs are constructed from WEB_BASE_URL:
